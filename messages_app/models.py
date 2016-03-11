@@ -14,15 +14,15 @@ class Messages(models.Model):
 
     def save(self, *args, **kwargs):
             super(Messages, self).save(*args, **kwargs)
-            self.increment_count(self.city, self.username)
+            self.increment_count()
             
     def increment_count(self):
         try:
-            target_city = CityStats.objects.get(city=self.city)
+            target_city = CityStats.objects.get(city=self.city, state=self.state)
             target_city.quantity += 1
             target_city.save()
         except CityStats.DoesNotExist:
-            CityStats(city=self.city, quantity=1).save()
+            CityStats(city=self.city, state=self.state, quantity=1).save()
         try:
             target_user = UserStats.objects.get(username=self.username)
             target_user.quantity += 1
